@@ -1,50 +1,32 @@
-"""
-Configuración de la aplicación
-"""
 import os
-import ssl
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Config:
-    """Configuración base"""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    ALERTAS_SERVICE_URL = os.environ.get('ALERTAS_SERVICE_URL') or 'http://127.0.0.1:8081'
-    REPORTES_SERVICE_URL = os.environ.get('REPORTES_SERVICE_URL') or 'http://127.0.0.1:8082'
-    MICROSERVICES_TIMEOUT_SECONDS = int(os.environ.get('MICROSERVICES_TIMEOUT_SECONDS') or 5)
-    
-    # Configuración de TiDB Cloud
-    # Format: mysql+pymysql://username:password@host:port/database?ssl_ca=/path/to/ca.pem
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:@localhost:3306/tienda_inventario?charset=utf8mb4'
-    
+    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key')
+
+    DB_HOST = os.getenv('DB_HOST', 'localhost')
+    DB_PORT = os.getenv('DB_PORT', '4000')
+    DB_USERNAME = os.getenv('DB_USERNAME', 'root')
+    DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+    DB_DATABASE = os.getenv('DB_DATABASE', 'inventario_proyecto')
+
+    SQLALCHEMY_DATABASE_URI = (
+        f"mysql+pymysql://{DB_USERNAME}:{DB_PASSWORD}"
+        f"@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
+        f"?ssl_verify_cert=false&ssl_verify_identity=false"
+    )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    
-    # Crear contexto SSL para TiDB Cloud
-    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    ssl_context.check_hostname = False
-    ssl_context.verify_mode = ssl.CERT_NONE
-    
     SQLALCHEMY_ENGINE_OPTIONS = {
-        'pool_pre_ping': True,
         'pool_recycle': 300,
+        'pool_pre_ping': True,
         'connect_args': {
-            'ssl': ssl_context
+            'ssl': {
+                'ssl_mode': 'VERIFY_IDENTITY',
+                'check_hostname': False,
+            }
         }
     }
-
-
-class DevelopmentConfig(Config):
-    """Configuración de desarrollo"""
-    DEBUG = True
-
-
-class ProductionConfig(Config):
-    """Configuración de producción"""
-    DEBUG = False
-
-
-config = {
-    'development': DevelopmentConfig,
-    'production': ProductionConfig,
-    'default': DevelopmentConfig
-}

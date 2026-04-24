@@ -1,114 +1,119 @@
-"""
-Casos de Uso de Productos - Capa de Negocio
-Estos casos de uso orquestan la lógica de negocio sin depender de frameworks
-"""
 from typing import List, Optional
 from app.core.entities.producto import Producto
-from app.core.interfaces.producto_repository import IProductoRepository
+from app.core.interfaces.producto_repository import ProductoRepositoryInterface
 
 
 class ProductoUseCases:
-    """Casos de uso relacionados con productos"""
-    
-    def __init__(self, producto_repository: IProductoRepository, alertas_client=None):
-        """
-        Inyección de dependencias - depende de la interfaz, no de la implementación
-        """
-        self.producto_repository = producto_repository
-        self.alertas_client = alertas_client
 
-    def _emitir_alerta_si_bajo_stock(self, producto: Producto) -> None:
-        """Notifica al microservicio de alertas sin interrumpir la operación principal."""
-        if not self.alertas_client:
-            return
-        if not producto.necesita_reabastecimiento():
-            return
-        try:
-            self.alertas_client.notify_low_stock(producto)
-        except Exception:
-            # El backend principal no debe fallar por errores en un microservicio externo.
-            pass
-    
-    def crear_producto(self, producto: Producto) -> tuple[bool, Optional[str], Optional[Producto]]:
-        """Crea un nuevo producto validando las reglas de negocio"""
-        # Validar reglas de negocio
-        es_valido, mensaje_error = producto.validar()
-        if not es_valido:
-            return False, mensaje_error, None
-        
-        # Persistir el producto
-        producto_creado = self.producto_repository.crear(producto)
-        self._emitir_alerta_si_bajo_stock(producto_creado)
-        return True, None, producto_creado
-    
-    def obtener_producto(self, id: int) -> Optional[Producto]:
-        """Obtiene un producto por su ID"""
-        return self.producto_repository.obtener_por_id(id)
-    
+    def __init__(self, repository: ProductoRepositoryInterface):
+        self.repository = repository
+
     def listar_productos(self) -> List[Producto]:
-        """Lista todos los productos"""
-        return self.producto_repository.obtener_todos()
-    
-    def actualizar_producto(self, producto: Producto) -> tuple[bool, Optional[str]]:
-        """Actualiza un producto existente"""
-        # Validar reglas de negocio
-        es_valido, mensaje_error = producto.validar()
-        if not es_valido:
-            return False, mensaje_error
+        return self.repository.obtener_todos()
+
+    def obtener_producto(self, producto_id: int) -> Optional[Producto]:
+        return self.repository.obtener_por_id(producto_id)
+
+    def crear_producto(self, data: dict) -> Producto:
+        nombre = data.get('nombre', '').strip()
+        if not nombre or len(nombre) < 3 or len(nombre) > 100:
+            raise ValueError('El nombre del producto debe tener entre 3 y 100 caracteres')
+            
+        descripcion = data.get('descripcion', '').strip()
+        if not descripcion or len(descripcion) < 10 or len(descripcion) > 255:
+            raise ValueError('La descripción debe tener entre 10 y 255 caracteres')
+            
+        codigo_barras = data.get('codigo_barras', '').strip()
+        if not codigo_barras or len(codigo_barras) < 8 or len(codigo_barras) > 15:
+            raise ValueError('El código de barras es obligatorio y debe tener entre 8 y 15 caracteres')
         
-        # Verificar que el producto existe
-        producto_existente = self.producto_repository.obtener_por_id(producto.id)
-        if not producto_existente:
-            return False, "Producto no encontrado"
-        
-        # Actualizar
-        exito = self.producto_repository.actualizar(producto)
-        if not exito:
-            return False, "Error al actualizar el producto"
-        self._emitir_alerta_si_bajo_stock(producto)
-        
-        return True, None
-    
-    def eliminar_producto(self, id: int) -> tuple[bool, Optional[str]]:
-        """Elimina un producto"""
-        # Verificar que el producto existe
-        producto = self.producto_repository.obtener_por_id(id)
+        precio_venta = float(data.get('precio_venta', 0))
+        if precio_venta <= 0:
+            raise ValueError('El precio de venta debe ser mayor a 0')
+            
+        precio_compra = float(data.get('precio_compra', -1))
+        if precio_compra < 0:
+            raise ValueError('El precio de compra es obligatorio y no puede ser negativo')
+            
+        stock_actual = int(data.get('stock_actual', -1))
+        if stock_actual < 0:
+            raise ValueError('El stock actual es obligatorio y no puede ser negativo')
+
+        producto = Producto(
+            nombre=nombre,
+            descripcion=descripcion,
+            codigo_barras=codigo_barras,
+            precio_compra=precio_compra,
+            precio_venta=precio_venta,
+            stock_actual=stock_actual,
+            stock_minimo=int(data.get('stock_minimo', 5)),
+            unidad_medida=data.get('unidad_medida', 'pieza'),
+            categoria_id=data.get('categoria_id'),
+            proveedor_id=data.get('proveedor_id'),
+            activo=data.get('activo', True),
+        )
+        return self.repository.crear(producto)
+
+    def actualizar_producto(self, producto_id: int, data: dict) -> Producto:
+        producto = self.repository.obtener_por_id(producto_id)
         if not producto:
-            return False, "Producto no encontrado"
-        
-        # Eliminar
-        exito = self.producto_repository.eliminar(id)
-        if not exito:
-            return False, "Error al eliminar el producto"
-        
-        return True, None
-    
-    def obtener_productos_por_categoria(self, categoria_id: int) -> List[Producto]:
-        """Obtiene productos de una categoría específica"""
-        return self.producto_repository.obtener_por_categoria(categoria_id)
-    
-    def obtener_productos_bajo_stock(self) -> List[Producto]:
-        """
-        Obtiene productos que necesitan reabastecimiento
-        Usa la lógica de negocio del dominio
-        """
-        productos = self.producto_repository.obtener_productos_bajo_stock()
-        return [p for p in productos if p.necesita_reabastecimiento()]
-    
-    def ajustar_stock(self, id: int, cantidad: int) -> tuple[bool, Optional[str]]:
-        """Ajusta el stock de un producto"""
-        producto = self.producto_repository.obtener_por_id(id)
-        if not producto:
-            return False, "Producto no encontrado"
-        
-        # Usar la lógica de negocio del dominio
-        if not producto.actualizar_stock(cantidad):
-            return False, "Stock insuficiente para realizar la operación"
-        
-        # Persistir cambios
-        exito = self.producto_repository.actualizar(producto)
-        if not exito:
-            return False, "Error al actualizar el stock"
-        self._emitir_alerta_si_bajo_stock(producto)
-        
-        return True, None
+            raise ValueError('Producto no encontrado')
+
+        if 'nombre' in data:
+            nombre = data['nombre'].strip()
+            if not nombre or len(nombre) < 3 or len(nombre) > 100:
+                raise ValueError('El nombre del producto debe tener entre 3 y 100 caracteres')
+            producto.nombre = nombre
+
+        if 'descripcion' in data:
+            descripcion = data['descripcion'].strip()
+            if not descripcion or len(descripcion) < 10 or len(descripcion) > 255:
+                raise ValueError('La descripción debe tener entre 10 y 255 caracteres')
+            producto.descripcion = descripcion
+
+        if 'codigo_barras' in data:
+            codigo_barras = data['codigo_barras'].strip()
+            if not codigo_barras or len(codigo_barras) < 8 or len(codigo_barras) > 15:
+                raise ValueError('El código de barras debe tener entre 8 y 15 caracteres')
+            producto.codigo_barras = codigo_barras
+
+        if 'precio_venta' in data:
+            precio_venta = float(data['precio_venta'])
+            if precio_venta <= 0:
+                raise ValueError('El precio de venta debe ser mayor a 0')
+            producto.precio_venta = precio_venta
+            
+        if 'precio_compra' in data:
+            precio_compra = float(data['precio_compra'])
+            if precio_compra < 0:
+                raise ValueError('El precio de compra no puede ser negativo')
+            producto.precio_compra = precio_compra
+
+        if 'stock_actual' in data:
+            stock_actual = int(data['stock_actual'])
+            if stock_actual < 0:
+                raise ValueError('El stock actual no puede ser negativo')
+            producto.stock_actual = stock_actual
+
+        producto.stock_minimo = int(data.get('stock_minimo', producto.stock_minimo))
+        producto.unidad_medida = data.get('unidad_medida', producto.unidad_medida)
+        producto.categoria_id = data.get('categoria_id', producto.categoria_id)
+        producto.proveedor_id = data.get('proveedor_id', producto.proveedor_id)
+        producto.activo = data.get('activo', producto.activo)
+
+        return self.repository.actualizar(producto)
+
+    def eliminar_producto(self, producto_id: int) -> bool:
+        return self.repository.eliminar(producto_id)
+
+    def obtener_bajo_stock(self) -> List[Producto]:
+        return self.repository.obtener_bajo_stock()
+
+    def contar_productos(self) -> int:
+        return self.repository.contar_todos()
+
+    def contar_bajo_stock(self) -> int:
+        return self.repository.contar_bajo_stock()
+
+    def valor_total_inventario(self) -> float:
+        return self.repository.valor_total_inventario()

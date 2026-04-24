@@ -1,81 +1,37 @@
 import axios from 'axios';
 
-// Usar variable de entorno o fallback a localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8080';
-const ALERTAS_API_BASE_URL = import.meta.env.VITE_ALERTAS_API_URL || 'http://127.0.0.1:8081';
-const REPORTES_API_BASE_URL = import.meta.env.VITE_REPORTES_API_URL || 'http://127.0.0.1:8082';
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8080/api';
 
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-const alertasApi = axios.create({
-  baseURL: `${ALERTAS_API_BASE_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+/* ── Productos ── */
+export const getProductos = () => api.get('/productos/');
+export const getProducto = (id) => api.get(`/productos/${id}`);
+export const crearProducto = (data) => api.post('/productos/', data);
+export const actualizarProducto = (id, data) => api.put(`/productos/${id}`, data);
+export const eliminarProducto = (id) => api.delete(`/productos/${id}`);
+export const getProductosBajoStock = () => api.get('/productos/bajo-stock');
+export const getProductosStats = () => api.get('/productos/stats');
 
-const reportesApi = axios.create({
-  baseURL: `${REPORTES_API_BASE_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+/* ── Categorías ── */
+export const getCategorias = () => api.get('/categorias/');
+export const getCategoria = (id) => api.get(`/categorias/${id}`);
+export const crearCategoria = (data) => api.post('/categorias/', data);
+export const actualizarCategoria = (id, data) => api.put(`/categorias/${id}`, data);
+export const eliminarCategoria = (id) => api.delete(`/categorias/${id}`);
+export const getCategoriasStats = () => api.get('/categorias/stats');
 
-// Interceptor para manejar errores globalmente
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// ========== PRODUCTOS ==========
-export const productosAPI = {
-  getAll: () => api.get('/productos/'),
-  getById: (id) => api.get(`/productos/${id}`),
-  getBajoStock: () => api.get('/productos/bajo-stock'),
-  create: (data) => api.post('/productos/', data),
-  update: (id, data) => api.put(`/productos/${id}`, data),
-  delete: (id) => api.delete(`/productos/${id}`),
-};
-
-// ========== CATEGORÍAS ==========
-export const categoriasAPI = {
-  getAll: () => api.get('/categorias/'),
-  getById: (id) => api.get(`/categorias/${id}`),
-  create: (data) => api.post('/categorias/', data),
-  update: (id, data) => api.put(`/categorias/${id}`, data),
-  delete: (id) => api.delete(`/categorias/${id}`),
-};
-
-// ========== PROVEEDORES ==========
-export const proveedoresAPI = {
-  getAll: () => api.get('/proveedores/'),
-  getById: (id) => api.get(`/proveedores/${id}`),
-  create: (data) => api.post('/proveedores/', data),
-  update: (id, data) => api.put(`/proveedores/${id}`, data),
-  delete: (id) => api.delete(`/proveedores/${id}`),
-};
-
-// ========== ALERTAS (MICROSERVICIO) ==========
-export const alertasAPI = {
-  getAll: (estado) => alertasApi.get(`/alertas/${estado ? `?estado=${estado}` : ''}`),
-  triggerCheckNow: () => alertasApi.post('/alertas/check-now'),
-  getNotifications: () => alertasApi.get('/alertas/notificaciones'),
-};
-
-// ========== REPORTES (MICROSERVICIO) ==========
-export const reportesAPI = {
-  getResumen: () => reportesApi.get('/reportes/resumen'),
-  generarSnapshotBajoStock: () => reportesApi.post('/reportes/bajo-stock-snapshot'),
-  getTendenciaBajoStock: () => reportesApi.get('/reportes/tendencia-bajo-stock'),
-  getEjecuciones: () => reportesApi.get('/reportes/ejecuciones'),
-};
+/* ── Proveedores ── */
+export const getProveedores = () => api.get('/proveedores/');
+export const getProveedor = (id) => api.get(`/proveedores/${id}`);
+export const crearProveedor = (data) => api.post('/proveedores/', data);
+export const actualizarProveedor = (id, data) => api.put(`/proveedores/${id}`, data);
+export const eliminarProveedor = (id) => api.delete(`/proveedores/${id}`);
+export const getProveedoresStats = () => api.get('/proveedores/stats');
 
 export default api;

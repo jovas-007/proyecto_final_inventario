@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout-main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px;
+  transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+  min-height: 100vh;
+  background: var(--background);
+}

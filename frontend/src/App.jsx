@@ -1,31 +1,23 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
 import Dashboard from './pages/dashboard/Dashboard';
-import ProductosList from './pages/productos/ProductosList';
-import CategoriasList from './pages/categorias/CategoriasList';
-import ProveedoresList from './pages/proveedores/ProveedoresList';
-import AlertasList from './pages/alertas/AlertasList';
-import ReportesList from './pages/reportes/ReportesList';
-import './App.css';
+import Productos from './pages/productos/Productos';
+import Categorias from './pages/categorias/Categorias';
+import Proveedores from './pages/proveedores/Proveedores';
+import Inventario from './pages/inventario/Inventario';
 
-function App() {
+export default function App() {
   return (
-    <Router>
-      <div className="app">
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/productos" element={<ProductosList />} />
-            <Route path="/categorias" element={<CategoriasList />} />
-            <Route path="/proveedores" element={<ProveedoresList />} />
-            <Route path="/alertas" element={<AlertasList />} />
-            <Route path="/reportes" element={<ReportesList />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/proveedores" element={<Proveedores />} />
+          <Route path="/inventario" element={<Inventario />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

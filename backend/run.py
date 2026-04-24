@@ -14,7 +14,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Habilitar CORS para desarrollo
+    # Habilitar CORS para desarrollo en localhost
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Inicializar base de datos

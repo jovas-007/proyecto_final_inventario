@@ -36,14 +36,14 @@ def procesar_mensaje(mensaje: dict):
         if tipo == 'stock_bajo':
             producto = data.get('producto', {})
             logger.info(
-                f"📦 Alerta recibida: {producto.get('nombre')} "
+                f"[ALERTA] {producto.get('nombre')} "
                 f"(stock: {producto.get('stock_actual')}/{producto.get('stock_minimo')})"
             )
             enviado = enviar_alerta(producto)
             if enviado:
-                logger.info("✉️  Correo enviado exitosamente")
+                logger.info("[OK] Correo enviado exitosamente")
             else:
-                logger.warning("⚠️  No se pudo enviar el correo")
+                logger.warning("[WARN] No se pudo enviar el correo")
         else:
             logger.warning(f"Tipo de evento desconocido: {tipo}")
 
@@ -68,18 +68,18 @@ def main():
                 socket_connect_timeout=5,
             )
             client.ping()
-            logger.info("✓ Conectado a Redis")
+            logger.info("[OK] Conectado a Redis")
 
             pubsub = client.pubsub()
             pubsub.subscribe('stock_alerts')
-            logger.info("✓ Suscrito al canal 'stock_alerts'")
+            logger.info("[OK] Suscrito al canal 'stock_alerts'")
 
             for mensaje in pubsub.listen():
                 if mensaje['type'] == 'message':
                     procesar_mensaje(mensaje)
 
         except redis.ConnectionError as e:
-            logger.error(f"✗ Conexión a Redis perdida: {e}")
+            logger.error(f"[ERROR] Conexion a Redis perdida: {e}")
             logger.info("Reintentando en 5 segundos...")
             time.sleep(5)
 

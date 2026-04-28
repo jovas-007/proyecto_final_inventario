@@ -21,13 +21,13 @@ def _cargar_template(producto: dict) -> str:
     # Color de severidad
     if stock_actual == 0:
         color_badge = '#ef4444'
-        texto_nivel = '🔴 AGOTADO'
+        texto_nivel = 'AGOTADO'
     elif stock_actual <= (stock_minimo // 2):
         color_badge = '#f97316'
-        texto_nivel = '🟠 CRÍTICO'
+        texto_nivel = 'CRITICO'
     else:
         color_badge = '#eab308'
-        texto_nivel = '🟡 BAJO'
+        texto_nivel = 'BAJO'
 
     try:
         with open('templates/alerta_stock.html', 'r', encoding='utf-8') as f:
@@ -44,11 +44,10 @@ def _cargar_template(producto: dict) -> str:
             texto_nivel=texto_nivel,
         )
     except FileNotFoundError:
-        # Fallback sin template
         return f"""
-        <h2>⚠️ Alerta de Stock Bajo</h2>
+        <h2>Alerta de Stock Bajo</h2>
         <p><b>{nombre}</b> tiene stock bajo.</p>
-        <p>Stock actual: {stock_actual} | Stock mínimo: {stock_minimo}</p>
+        <p>Stock actual: {stock_actual} | Stock minimo: {stock_minimo}</p>
         <p>Proveedor: {proveedor}</p>
         """
 
@@ -56,7 +55,7 @@ def _cargar_template(producto: dict) -> str:
 def enviar_alerta(producto: dict) -> bool:
     """Envía un correo de alerta de stock bajo usando Resend."""
     if not RESEND_API_KEY:
-        logger.warning("⚠ RESEND_API_KEY no configurada, no se envía correo")
+        logger.warning("[WARN] RESEND_API_KEY no configurada, no se envia correo")
         return False
 
     nombre = producto.get('nombre', 'Producto')
@@ -68,14 +67,14 @@ def enviar_alerta(producto: dict) -> bool:
         params = {
             "from": ALERT_EMAIL_FROM,
             "to": [ALERT_EMAIL_TO],
-            "subject": f"⚠️ Stock Bajo: {nombre} ({stock_actual} unidades)",
+            "subject": f"[STOCK BAJO] {nombre} ({stock_actual} unidades)",
             "html": html_content,
         }
 
         email = resend.Emails.send(params)
-        logger.info(f"✓ Correo de alerta enviado para '{nombre}' → {ALERT_EMAIL_TO} (ID: {email.get('id', 'N/A')})")
+        logger.info(f"[OK] Correo enviado para '{nombre}' -> {ALERT_EMAIL_TO} (ID: {email.get('id', 'N/A')})")
         return True
 
     except Exception as e:
-        logger.error(f"✗ Error enviando correo: {e}")
+        logger.error(f"[ERROR] Enviando correo: {e}")
         return False

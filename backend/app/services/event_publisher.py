@@ -21,9 +21,9 @@ class EventPublisher:
                     socket_connect_timeout=3,
                 )
                 cls._client.ping()
-                logger.info("✓ Conectado a Redis para eventos")
+                logger.info("[OK] Conectado a Redis para eventos")
             except Exception as e:
-                logger.warning(f"⚠ Redis no disponible: {e}")
+                logger.warning(f"[WARN] Redis no disponible: {e}")
                 cls._client = None
         return cls._client
 
@@ -55,7 +55,7 @@ class EventPublisher:
 
             client.publish('stock_alerts', json.dumps(evento))
             logger.info(
-                f"📢 Alerta publicada: {producto_data.get('nombre')} "
+                f"[EVENTO] Alerta publicada: {producto_data.get('nombre')} "
                 f"(stock: {producto_data.get('stock_actual')}/{producto_data.get('stock_minimo')})"
             )
             return True

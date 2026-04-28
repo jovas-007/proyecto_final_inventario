@@ -13,12 +13,12 @@ reportes_bp = Blueprint('reportes', __name__, url_prefix='/reportes')
 
 @reportes_bp.route('/inventario', methods=['GET'])
 def reporte_inventario():
-    logger.info("📄 Solicitud de reporte: Inventario Completo")
+    logger.info("[REQUEST] Inventario Completo")
     try:
-        logger.info("⏳ Consultando base de datos...")
+        logger.info("[DB] Consultando base de datos...")
         pdf_buffer = generar_inventario_completo()
         size = pdf_buffer.getbuffer().nbytes
-        logger.info(f"✅ PDF generado exitosamente — tamaño: {size} bytes")
+        logger.info(f"[OK] PDF generado — tamanio: {size} bytes")
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
@@ -32,11 +32,11 @@ def reporte_inventario():
 
 @reportes_bp.route('/stock-bajo', methods=['GET'])
 def reporte_stock_bajo():
-    logger.info("📄 Solicitud de reporte: Stock Bajo")
+    logger.info("[REQUEST] Stock Bajo")
     try:
         pdf_buffer = generar_stock_bajo()
         size = pdf_buffer.getbuffer().nbytes
-        logger.info(f"✅ PDF stock-bajo generado — tamaño: {size} bytes")
+        logger.info(f"[OK] PDF stock-bajo — tamanio: {size} bytes")
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
@@ -50,11 +50,11 @@ def reporte_stock_bajo():
 
 @reportes_bp.route('/categorias', methods=['GET'])
 def reporte_categorias():
-    logger.info("📄 Solicitud de reporte: Categorías")
+    logger.info("[REQUEST] Categorias")
     try:
         pdf_buffer = generar_reporte_categorias()
         size = pdf_buffer.getbuffer().nbytes
-        logger.info(f"✅ PDF categorías generado — tamaño: {size} bytes")
+        logger.info(f"[OK] PDF categorias — tamanio: {size} bytes")
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
@@ -68,11 +68,11 @@ def reporte_categorias():
 
 @reportes_bp.route('/proveedores', methods=['GET'])
 def reporte_proveedores():
-    logger.info("📄 Solicitud de reporte: Proveedores")
+    logger.info("[REQUEST] Proveedores")
     try:
         pdf_buffer = generar_reporte_proveedores()
         size = pdf_buffer.getbuffer().nbytes
-        logger.info(f"✅ PDF proveedores generado — tamaño: {size} bytes")
+        logger.info(f"[OK] PDF proveedores — tamanio: {size} bytes")
         return send_file(
             pdf_buffer,
             mimetype='application/pdf',
@@ -92,7 +92,7 @@ def health():
         n_productos = ProductoModel.query.filter_by(activo=True).count()
         n_categorias = CategoriaModel.query.count()
         n_proveedores = ProveedorModel.query.count()
-        logger.info(f"🩺 Health check OK — productos={n_productos}, categorias={n_categorias}, proveedores={n_proveedores}")
+        logger.info(f"[OK] Health check — productos={n_productos}, categorias={n_categorias}, proveedores={n_proveedores}")
         return jsonify({
             'status': 'ok',
             'productos': n_productos,

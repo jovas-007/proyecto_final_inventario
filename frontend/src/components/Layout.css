@@ -11,3 +11,25 @@
   min-height: 100vh;
   background: var(--background);
 }
+
+/* ── Collapsed sidebar ── */
+.layout-main.collapsed {
+  margin-left: 68px;
+}
+
+/* ── Responsive: tablet ── */
+@media (max-width: 900px) {
+  .layout-main {
+    margin-left: 0;
+    padding: 16px;
+    padding-top: 72px; /* space for mobile top bar */
+  }
+}
+
+/* ── Responsive: mobile ── */
+@media (max-width: 600px) {
+  .layout-main {
+    padding: 12px;
+    padding-top: 68px;
+  }
+}

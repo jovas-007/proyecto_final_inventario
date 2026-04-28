@@ -6,6 +6,7 @@ import Categorias from './pages/categorias/Categorias';
 import Proveedores from './pages/proveedores/Proveedores';
 import Inventario from './pages/inventario/Inventario';
 import Notificaciones from './pages/notificaciones/Notificaciones';
+import Reportes from './pages/reportes/Reportes';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/inventario" element={<Inventario />} />
           <Route path="/notificaciones" element={<Notificaciones />} />
+          <Route path="/reportes" element={<Reportes />} />
         </Route>
       </Routes>
     </BrowserRouter>

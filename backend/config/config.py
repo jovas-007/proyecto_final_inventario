@@ -19,6 +19,9 @@ class Config:
         f"?ssl_verify_cert=false&ssl_verify_identity=false"
     )
 
+    # Redis para microservicio de notificaciones
+    REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_recycle': 300,

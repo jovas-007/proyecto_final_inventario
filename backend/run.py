@@ -24,10 +24,12 @@ def create_app():
     from app.web.api.producto_api import producto_bp
     from app.web.api.categoria_api import categoria_bp
     from app.web.api.proveedor_api import proveedor_bp
+    from app.web.api.notificacion_api import notificacion_bp
 
     app.register_blueprint(producto_bp)
     app.register_blueprint(categoria_bp)
     app.register_blueprint(proveedor_bp)
+    app.register_blueprint(notificacion_bp)
 
     # Crear tablas si no existen
     with app.app_context():

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   FiGrid, FiPackage, FiLayers, FiTruck,
-  FiClipboard, FiMenu, FiX
+  FiClipboard, FiBell, FiMenu, FiX
 } from 'react-icons/fi';
 import { useState } from 'react';
 import './Navbar.css';
@@ -12,6 +12,7 @@ const navItems = [
   { to: '/categorias', icon: <FiLayers />, label: 'Categorías' },
   { to: '/proveedores', icon: <FiTruck />, label: 'Proveedores' },
   { to: '/inventario', icon: <FiClipboard />, label: 'Inventario' },
+  { to: '/notificaciones', icon: <FiBell />, label: 'Alertas' },
 ];
 
 export default function Navbar() {

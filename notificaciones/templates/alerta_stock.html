@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body style="margin:0; padding:0; background-color:#0f0f23; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0f0f23; padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#1a1a3e 0%,#16162e 100%); border-radius:16px; border:1px solid #2a2a5a; overflow:hidden;">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,{color_badge}22,{color_badge}11); padding:28px 32px; border-bottom:1px solid #2a2a5a;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <div style="font-size:14px; color:{color_badge}; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px;">
+                      {texto_nivel}
+                    </div>
+                    <div style="font-size:22px; color:#ffffff; font-weight:700;">
+                      Alerta de Stock Bajo
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Product Info -->
+          <tr>
+            <td style="padding:28px 32px;">
+              <div style="font-size:18px; color:#ffffff; font-weight:600; margin-bottom:20px;">
+                {nombre}
+              </div>
+
+              <!-- Stock Badge -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:{color_badge}15; border:1px solid {color_badge}44; border-radius:12px; margin-bottom:24px;">
+                <tr>
+                  <td style="padding:20px; text-align:center;">
+                    <div style="font-size:38px; color:{color_badge}; font-weight:800; line-height:1;">
+                      {stock_actual}
+                    </div>
+                    <div style="font-size:13px; color:#8888aa; margin-top:4px;">
+                      de {stock_minimo} mínimo requerido
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Details Table -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+                <tr>
+                  <td style="padding:10px 0; color:#8888aa; border-bottom:1px solid #2a2a5a;">Código de Barras</td>
+                  <td style="padding:10px 0; color:#ffffff; text-align:right; border-bottom:1px solid #2a2a5a; font-family:monospace;">{codigo}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; color:#8888aa; border-bottom:1px solid #2a2a5a;">Precio de Venta</td>
+                  <td style="padding:10px 0; color:#22c55e; text-align:right; border-bottom:1px solid #2a2a5a; font-weight:600;">{precio}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; color:#8888aa; border-bottom:1px solid #2a2a5a;">Categoría</td>
+                  <td style="padding:10px 0; color:#ffffff; text-align:right; border-bottom:1px solid #2a2a5a;">{categoria}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 0; color:#8888aa;">Proveedor</td>
+                  <td style="padding:10px 0; color:#a78bfa; text-align:right; font-weight:600;">{proveedor}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:0 32px 28px 32px;">
+              <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9); border-radius:10px; padding:14px; text-align:center;">
+                <span style="color:#ffffff; font-size:14px; font-weight:600;">
+                  Contacta a {proveedor} para resurtir
+                </span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:16px 32px; border-top:1px solid #2a2a5a; text-align:center;">
+              <div style="font-size:12px; color:#555577;">
+                Sistema de Inventario — Notificación automática
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

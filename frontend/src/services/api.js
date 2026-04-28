@@ -34,4 +34,7 @@ export const actualizarProveedor = (id, data) => api.put(`/proveedores/${id}`, d
 export const eliminarProveedor = (id) => api.delete(`/proveedores/${id}`);
 export const getProveedoresStats = () => api.get('/proveedores/stats');
 
+/* ── Notificaciones ── */
+export const getAlertasActivas = () => api.get('/notificaciones/alertas-activas');
+
 export default api;

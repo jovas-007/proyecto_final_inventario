@@ -1,6 +1,10 @@
+import logging
 from typing import List, Optional
 from app.core.entities.producto import Producto
 from app.core.interfaces.producto_repository import ProductoRepositoryInterface
+from app.services.event_publisher import EventPublisher
+
+logger = logging.getLogger(__name__)
 
 
 class ProductoUseCases:
@@ -52,7 +56,9 @@ class ProductoUseCases:
             proveedor_id=data.get('proveedor_id'),
             activo=data.get('activo', True),
         )
-        return self.repository.crear(producto)
+        producto_creado = self.repository.crear(producto)
+        self._verificar_stock_bajo(producto_creado)
+        return producto_creado
 
     def actualizar_producto(self, producto_id: int, data: dict) -> Producto:
         producto = self.repository.obtener_por_id(producto_id)
@@ -101,7 +107,9 @@ class ProductoUseCases:
         producto.proveedor_id = data.get('proveedor_id', producto.proveedor_id)
         producto.activo = data.get('activo', producto.activo)
 
-        return self.repository.actualizar(producto)
+        producto_actualizado = self.repository.actualizar(producto)
+        self._verificar_stock_bajo(producto_actualizado)
+        return producto_actualizado
 
     def eliminar_producto(self, producto_id: int) -> bool:
         return self.repository.eliminar(producto_id)
@@ -117,3 +125,12 @@ class ProductoUseCases:
 
     def valor_total_inventario(self) -> float:
         return self.repository.valor_total_inventario()
+
+    def _verificar_stock_bajo(self, producto: Producto):
+        """Publica alerta en Redis si el producto tiene stock bajo."""
+        try:
+            if producto.stock_actual <= producto.stock_minimo:
+                EventPublisher.publicar_alerta_stock(producto.to_dict())
+        except Exception as e:
+            # Nunca interrumpir el CRUD por un fallo de notificación
+            logger.error(f"Error verificando stock bajo: {e}")

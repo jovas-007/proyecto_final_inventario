@@ -5,6 +5,7 @@ import Productos from './pages/productos/Productos';
 import Categorias from './pages/categorias/Categorias';
 import Proveedores from './pages/proveedores/Proveedores';
 import Inventario from './pages/inventario/Inventario';
+import Notificaciones from './pages/notificaciones/Notificaciones';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/inventario" element={<Inventario />} />
+          <Route path="/notificaciones" element={<Notificaciones />} />
         </Route>
       </Routes>
     </BrowserRouter>

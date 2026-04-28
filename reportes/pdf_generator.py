@@ -149,9 +149,14 @@ def _table_style():
     ])
 
 
-def _footer(canvas, doc):
-    """Pie de página con número de página."""
+def _page_background(canvas, doc):
+    """Dibuja el fondo oscuro y el pie de página."""
+    width, height = doc.pagesize
     canvas.saveState()
+    # Fondo oscuro
+    canvas.setFillColor(DARK_BG)
+    canvas.rect(0, 0, width, height, fill=True, stroke=False)
+    # Pie de página
     canvas.setFillColor(TEXT_MUTED)
     canvas.setFont('Helvetica', 7)
     canvas.drawString(
@@ -159,7 +164,7 @@ def _footer(canvas, doc):
         f"StockPro — Sistema de Inventario  |  Página {doc.page}"
     )
     canvas.drawRightString(
-        letter[0] - 40 if doc.pagesize == letter else landscape(letter)[0] - 40,
+        width - 40,
         20,
         datetime.now().strftime('%d/%m/%Y %H:%M'),
     )
@@ -179,7 +184,6 @@ def generar_inventario_completo():
         leftMargin=30,
         rightMargin=30,
     )
-    doc.pagecolor = DARK_BG
 
     productos = ProductoModel.query.filter_by(activo=True).order_by(ProductoModel.nombre).all()
 
@@ -243,7 +247,7 @@ def generar_inventario_completo():
     table.setStyle(style)
     elements.append(table)
 
-    doc.build(elements, onFirstPage=_footer, onLaterPages=_footer)
+    doc.build(elements, onFirstPage=_page_background, onLaterPages=_page_background)
     buffer.seek(0)
     return buffer
 
@@ -261,7 +265,6 @@ def generar_stock_bajo():
         leftMargin=30,
         rightMargin=30,
     )
-    doc.pagecolor = DARK_BG
 
     productos = ProductoModel.query.filter(
         ProductoModel.stock_actual <= ProductoModel.stock_minimo,
@@ -323,7 +326,7 @@ def generar_stock_bajo():
     table.setStyle(style)
     elements.append(table)
 
-    doc.build(elements, onFirstPage=_footer, onLaterPages=_footer)
+    doc.build(elements, onFirstPage=_page_background, onLaterPages=_page_background)
     buffer.seek(0)
     return buffer
 
@@ -341,7 +344,6 @@ def generar_reporte_categorias():
         leftMargin=30,
         rightMargin=30,
     )
-    doc.pagecolor = DARK_BG
 
     categorias = CategoriaModel.query.order_by(CategoriaModel.nombre).all()
 
@@ -424,7 +426,7 @@ def generar_reporte_categorias():
         table.setStyle(_table_style())
         elements.append(table)
 
-    doc.build(elements, onFirstPage=_footer, onLaterPages=_footer)
+    doc.build(elements, onFirstPage=_page_background, onLaterPages=_page_background)
     buffer.seek(0)
     return buffer
 
@@ -442,7 +444,6 @@ def generar_reporte_proveedores():
         leftMargin=30,
         rightMargin=30,
     )
-    doc.pagecolor = DARK_BG
 
     proveedores = ProveedorModel.query.order_by(ProveedorModel.nombre).all()
     activos = sum(1 for p in proveedores if p.activo)
@@ -485,6 +486,6 @@ def generar_reporte_proveedores():
     table.setStyle(style)
     elements.append(table)
 
-    doc.build(elements, onFirstPage=_footer, onLaterPages=_footer)
+    doc.build(elements, onFirstPage=_page_background, onLaterPages=_page_background)
     buffer.seek(0)
     return buffer

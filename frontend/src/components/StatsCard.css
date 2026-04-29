@@ -82,3 +82,25 @@
   color: var(--text-muted);
   margin-top: 2px;
 }
+
+@media (max-width: 640px) {
+  .stats-card {
+    padding: 16px 18px;
+    gap: 12px;
+    border-radius: 14px;
+  }
+
+  .stats-card__icon {
+    width: 42px;
+    height: 42px;
+    font-size: 1.25rem;
+  }
+
+  .stats-card__value {
+    font-size: 1.35rem;
+  }
+
+  .stats-card__label {
+    font-size: 0.78rem;
+  }
+}

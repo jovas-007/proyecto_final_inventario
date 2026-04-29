@@ -111,18 +111,18 @@ export default function Inventario() {
           <tbody>
             {filtered.map((p) => (
               <tr key={p.id}>
-                <td className="td-name">
+                <td className="td-name" data-label="Producto">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <FiPackage style={{ color: 'var(--primary)', flexShrink: 0 }} />
                     {p.nombre}
                   </div>
                 </td>
-                <td style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{p.codigo_barras || '—'}</td>
-                <td>{p.categoria_nombre || '—'}</td>
-                <td>{p.proveedor_nombre || '—'}</td>
-                <td>${p.precio_compra.toFixed(2)}</td>
-                <td style={{ fontWeight: 600 }}>${p.precio_venta.toFixed(2)}</td>
-                <td>
+                <td data-label="Código" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{p.codigo_barras || '—'}</td>
+                <td data-label="Categoría">{p.categoria_nombre || '—'}</td>
+                <td data-label="Proveedor">{p.proveedor_nombre || '—'}</td>
+                <td data-label="P. Compra">${p.precio_compra.toFixed(2)}</td>
+                <td data-label="P. Venta" style={{ fontWeight: 600 }}>${p.precio_venta.toFixed(2)}</td>
+                <td data-label="Stock">
                   <span className={`stock-badge ${
                     p.stock_actual <= p.stock_minimo
                       ? p.stock_actual === 0 ? 'stock-badge--danger' : 'stock-badge--warning'
@@ -131,9 +131,9 @@ export default function Inventario() {
                     {p.stock_actual}
                   </span>
                 </td>
-                <td>{p.stock_minimo}</td>
-                <td style={{ textTransform: 'capitalize' }}>{p.unidad_medida}</td>
-                <td style={{ fontWeight: 600 }}>${(p.precio_venta * p.stock_actual).toFixed(2)}</td>
+                <td data-label="Mínimo">{p.stock_minimo}</td>
+                <td data-label="Unidad" style={{ textTransform: 'capitalize' }}>{p.unidad_medida}</td>
+                <td data-label="Valor Total" style={{ fontWeight: 600 }}>${(p.precio_venta * p.stock_actual).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

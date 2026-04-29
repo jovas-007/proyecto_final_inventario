@@ -185,16 +185,16 @@ export default function Productos() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <td className="td-name">
+                  <td className="td-name" data-label="Producto">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <FiPackage style={{ color: 'var(--primary)', flexShrink: 0 }} />
                       {p.nombre}
                     </div>
                   </td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{p.codigo_barras || '—'}</td>
-                  <td>${p.precio_compra.toFixed(2)}</td>
-                  <td style={{ fontWeight: 600 }}>${p.precio_venta.toFixed(2)}</td>
-                  <td>
+                  <td data-label="Código" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{p.codigo_barras || '—'}</td>
+                  <td data-label="Compra">${p.precio_compra.toFixed(2)}</td>
+                  <td data-label="Venta" style={{ fontWeight: 600 }}>${p.precio_venta.toFixed(2)}</td>
+                  <td data-label="Stock">
                     <span className={`stock-badge ${
                       p.stock_actual <= p.stock_minimo
                         ? p.stock_actual === 0 ? 'stock-badge--danger' : 'stock-badge--warning'
@@ -203,9 +203,9 @@ export default function Productos() {
                       {p.stock_actual}
                     </span>
                   </td>
-                  <td>{p.categoria_nombre || '—'}</td>
-                  <td>{p.proveedor_nombre || '—'}</td>
-                  <td>
+                  <td data-label="Categoría">{p.categoria_nombre || '—'}</td>
+                  <td data-label="Proveedor">{p.proveedor_nombre || '—'}</td>
+                  <td data-label="Acciones">
                     <div className="actions-cell">
                       <button className="btn btn--ghost btn--icon btn--sm" onClick={() => openEdit(p)} title="Editar">
                         <FiEdit2 />

@@ -196,6 +196,11 @@
     padding: 4px;
     border-radius: 8px;
   }
+
+  .mobile-menu-btn:active {
+    background: var(--hover);
+    color: var(--text);
+  }
 }
 
 /* ── Overlay backdrop ── */

@@ -175,7 +175,7 @@ export default function Notificaciones() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td>
+                    <td data-label="Severidad">
                       <span
                         className="stock-badge"
                         style={{
@@ -192,7 +192,7 @@ export default function Notificaciones() {
                         {config.label}
                       </span>
                     </td>
-                    <td className="td-name">
+                    <td className="td-name" data-label="Producto">
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FiPackage style={{ color: 'var(--primary)', flexShrink: 0 }} />
                         <div>
@@ -203,7 +203,7 @@ export default function Notificaciones() {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Stock Actual">
                       <span
                         style={{
                           fontSize: '1.2rem',
@@ -214,9 +214,9 @@ export default function Notificaciones() {
                         {a.stock_actual}
                       </span>
                     </td>
-                    <td style={{ color: 'var(--text-muted)' }}>{a.stock_minimo}</td>
-                    <td style={{ fontWeight: 600 }}>${a.precio_venta?.toFixed(2)}</td>
-                    <td>
+                    <td data-label="Stock Mínimo" style={{ color: 'var(--text-muted)' }}>{a.stock_minimo}</td>
+                    <td data-label="Precio" style={{ fontWeight: 600 }}>${a.precio_venta?.toFixed(2)}</td>
+                    <td data-label="Proveedor">
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         <FiTruck style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }} />
                         {a.proveedor_nombre || '—'}

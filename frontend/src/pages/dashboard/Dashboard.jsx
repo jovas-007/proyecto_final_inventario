@@ -115,15 +115,15 @@ export default function Dashboard() {
               <tbody>
                 {bajoStock.map((p) => (
                   <tr key={p.id}>
-                    <td className="td-name">{p.nombre}</td>
-                    <td>{p.categoria_nombre || '—'}</td>
-                    <td>
+                    <td className="td-name" data-label="Producto">{p.nombre}</td>
+                    <td data-label="Categoría">{p.categoria_nombre || '—'}</td>
+                    <td data-label="Stock Actual">
                       <span className={`stock-badge ${p.stock_actual === 0 ? 'stock-badge--danger' : 'stock-badge--warning'}`}>
                         {p.stock_actual}
                       </span>
                     </td>
-                    <td>{p.stock_minimo}</td>
-                    <td>{p.proveedor_nombre || '—'}</td>
+                    <td data-label="Stock Mínimo">{p.stock_minimo}</td>
+                    <td data-label="Proveedor">{p.proveedor_nombre || '—'}</td>
                   </tr>
                 ))}
               </tbody>

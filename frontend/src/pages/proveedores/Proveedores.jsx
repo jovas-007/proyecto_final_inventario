@@ -127,20 +127,20 @@ export default function Proveedores() {
             <AnimatePresence>
               {filtered.map((p) => (
                 <motion.tr key={p.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <td className="td-name">
+                  <td className="td-name" data-label="Proveedor">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <FiTruck style={{ color: 'var(--success)', flexShrink: 0 }} />
                       {p.nombre}
                     </div>
                   </td>
-                  <td>{p.contacto || '—'}</td>
-                  <td>
+                  <td data-label="Contacto">{p.contacto || '—'}</td>
+                  <td data-label="Teléfono">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                       <FiPhone style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }} />
                       {p.telefono}
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Email">
                     {p.email ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         <FiMail style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }} />
@@ -148,13 +148,13 @@ export default function Proveedores() {
                       </div>
                     ) : '—'}
                   </td>
-                  <td>
+                  <td data-label="Estado">
                     <span className={`stock-badge ${p.activo ? '' : 'stock-badge--danger'}`}
                       style={p.activo ? { background: 'rgba(34,197,94,0.1)', color: 'var(--success)' } : {}}>
                       {p.activo ? 'Activo' : 'Inactivo'}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Acciones">
                     <div className="actions-cell">
                       <button className="btn btn--ghost btn--icon btn--sm" onClick={() => openEdit(p)}><FiEdit2 /></button>
                       <button className="btn btn--danger btn--icon btn--sm" onClick={() => handleDelete(p.id)}><FiTrash2 /></button>

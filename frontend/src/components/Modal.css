@@ -119,3 +119,45 @@
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }
+
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: none !important;
+    max-height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+    padding: 16px 18px;
+  }
+
+  .modal-body {
+    padding: 18px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -106,15 +106,15 @@ export default function Categorias() {
             <AnimatePresence>
               {filtered.map((c) => (
                 <motion.tr key={c.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <td style={{ color: 'var(--text-muted)' }}>#{c.id}</td>
-                  <td className="td-name">
+                  <td data-label="ID" style={{ color: 'var(--text-muted)' }}>#{c.id}</td>
+                  <td className="td-name" data-label="Nombre">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <FiLayers style={{ color: 'var(--info)', flexShrink: 0 }} />
                       {c.nombre}
                     </div>
                   </td>
-                  <td>{c.descripcion || '—'}</td>
-                  <td>
+                  <td data-label="Descripción">{c.descripcion || '—'}</td>
+                  <td data-label="Acciones">
                     <div className="actions-cell">
                       <button className="btn btn--ghost btn--icon btn--sm" onClick={() => openEdit(c)}><FiEdit2 /></button>
                       <button className="btn btn--danger btn--icon btn--sm" onClick={() => handleDelete(c.id)}><FiTrash2 /></button>
